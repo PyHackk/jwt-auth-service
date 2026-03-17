@@ -1,41 +1,40 @@
-{!loading && [...groups].sort((a, b) => {
-    const order: Record<string, number> = { 'Dashboards': 1, 'Workbooks': 2 };
-    const aOrder = order[a.category] || 99;
-    const bOrder = order[b.category] || 99;
-    return aOrder - bOrder;
-}).map((group) => (
-
-
-
-
-
 const handleOpen = async () => {
-    const url = m.url_with_repo || item.url || '';
-    if (url) {
+    const m = item.metadata || {};
+    
+    // Dashboards: use url_with_repo directly
+    if (m.url_with_repo) {
         const title = (item.title || '').replace(/<[^>]*>/g, '');
-        sessionStorage.setItem('dashboard_direct_url', url);
+        sessionStorage.setItem('dashboard_direct_url', m.url_with_repo);
         window.location.href = `/dashboard?title=${encodeURIComponent(title)}&from=/`;
         return;
     }
-
-    // Fallback: try to resolve URL
+    
+    // Workbooks: try to resolve URL
     setLoading(true);
     try {
+        const title = (item.title || '').replace(/<[^>]*>/g, '');
+        const siteNamespace = (m.site_name || 'CIS').toLowerCase();
+        const repoUrl = m.repository_url || '';
+        
+        // Try resolveTableauUrl first
         const uri = await resolveTableauUrl(
-            m.view_name || item.title.replace(/<[^>]*>/g, ''),
-            m.workbook_name || ''
+            m.view_name || title,
+            m.workbook_name || repoUrl
         );
+        
         setAttempted(true);
         if (uri) {
             sessionStorage.setItem('dashboard_direct_url', uri);
-            window.location.href = `/dashboard?title=${encodeURIComponent((item.title || '').replace(/<[^>]*>/g, ''))}&from=/`;
+            window.location.href = `/dashboard?title=${encodeURIComponent(title)}&from=/`;
+        } else {
+            // Fallback: build URL from workbook repo
+            const builtUrl = `https://tableau.cib.echonet/#/site/${siteNamespace}/views/${repoUrl}`;
+            sessionStorage.setItem('dashboard_direct_url', builtUrl);
+            window.location.href = `/dashboard?title=${encodeURIComponent(title)}&from=/`;
         }
+    } catch {
+        setAttempted(true);
     } finally {
         setLoading(false);
     }
 };
-
-
-
-
-{loading ? 'Resolving...' : attempted && !resolvedUrl ? 'Link unavailable' : 'Open Dashboard'}
