@@ -1,47 +1,21 @@
 const handleExpand = (uri: string, card: InsightCard) => {
     const title = card.customized_name || card.view_name || 'Dashboard';
-    const fullUrl = card.url_attempt_2_repo || uri;
+    
+    let fullUrl = card.url_attempt_2_repo;
+    
+    // If no pre-built URL, construct it (permissioned cards)
+    if (!fullUrl) {
+        const baseUrl = 'https://tableau.cib.echonet';
+        const siteNamespace = card.site_name || 'ci5';
+        const workbookRepo = card.workbook_repo_url;
+        let viewNameClean = card.view_name;
+        if (card.view_repository_url) {
+            const parts = card.view_repository_url.split('/');
+            viewNameClean = parts[parts.length - 1] || card.view_name;
+        }
+        const viewIndex = card.view_index || 0;
+        fullUrl = `${baseUrl}/#/site/${siteNamespace}/views/${workbookRepo}/${viewNameClean}?:iid=${viewIndex}`;
+    }
     
     window.location.href = `/dashboard?url=${encodeURIComponent(fullUrl)}&title=${encodeURIComponent(title)}&from=/insights`;
 };
-
-
-
-
-
-
-
-function DashboardContent() {
-    const searchParams = useSearchParams();
-    const router = useRouter();
-
-    const directUrl = searchParams.get('url');
-    const view = searchParams.get('view');
-    const iid = searchParams.get('iid') || '1';
-    const backTo = searchParams.get('from') || '/';
-    const title = searchParams.get('title') || 'Dashboard View';
-
-    if (!directUrl && !view) {
-        router.push('/');
-        return null;
-    }
-
-    const tableauUrl = directUrl 
-        ? `${directUrl}&:embed=y&:toolbar=no`
-        : `https://tableau.cib.echonet/#/site/CIS/${view}?:iid=${iid}&:embed=y&:toolbar=no`;
-
-    return (
-        <div className="home-page dashboard-page">
-            <Header title={title} />
-            <DashboardView
-                url={tableauUrl}
-                title={title}
-                onBack={() => router.push(backTo)}
-            />
-        </div>
-    );
-}
-
-
-
-
