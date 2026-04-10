@@ -1,0 +1,782 @@
+/* ========================================
+   EXPANDABLE TABLE — QDI Portal
+   ======================================== */
+
+/* ---- Section (card wrapper) ---- */
+.et-section {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---- Compact header ---- */
+.et-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+.et-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+}
+
+.et-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #888;
+}
+
+.et-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.et-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.et-toggle-btn:hover {
+  background: #f3f4f6;
+}
+
+/* ---- Preview (compact table area) ---- */
+.et-preview {
+  padding: 0 20px 16px;
+  overflow-x: auto;
+}
+
+/* ========================================
+   TABLE BASE
+   ======================================== */
+.et-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  table-layout: auto;
+}
+
+.et-table thead th {
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  color: #555;
+  border-bottom: 2px solid #e5e7eb;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #fafafa;
+  white-space: nowrap;
+}
+
+.et-table tbody td {
+  padding: 8px 12px;
+  color: #333;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+}
+
+.et-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.et-empty {
+  text-align: center;
+  padding: 32px 12px !important;
+  color: #999;
+}
+
+/* ========================================
+   OVERLAY — FULL VIEWPORT TAKEOVER
+   ======================================== */
+@keyframes et-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes et-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes et-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes et-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.et-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  animation: et-overlay-in 0.2s ease-out forwards;
+}
+
+.et-overlay.et-closing {
+  animation: et-overlay-out 0.2s ease-in forwards;
+}
+
+/* ---- Full-screen panel ---- */
+.et-expanded-container {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  animation: et-panel-in 0.25s ease-out forwards;
+}
+
+.et-overlay.et-closing .et-expanded-container {
+  animation: et-panel-out 0.2s ease-in forwards;
+}
+
+/* ---- Expanded header bar ---- */
+.et-expanded-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.et-expanded-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.et-expanded-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+}
+
+.et-expanded-header .et-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: #888;
+}
+
+.et-expanded-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---- Search ---- */
+.et-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.et-search-icon {
+  position: absolute;
+  left: 10px;
+  color: #999;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.et-search-input {
+  padding: 8px 12px 8px 32px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  width: 260px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fafafa;
+}
+
+.et-search-input:focus {
+  border-color: #2d6a4f;
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+  background: #fff;
+}
+
+/* ---- Close button ---- */
+.et-close-btn {
+  background: none;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  color: #555;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.et-close-btn:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  color: #111;
+}
+
+/* ---- Scrollable content area ---- */
+.et-expanded-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 0;
+}
+
+/* ---- Expanded table tweaks ---- */
+.et-expanded-content .et-table {
+  width: 100%;
+}
+
+.et-expanded-content .et-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fafafa;
+  box-shadow: 0 1px 0 #e5e7eb;
+}
+
+.et-expanded-content .et-table tbody td {
+  padding: 10px 12px;
+}
+
+/* ---- Search results bar ---- */
+.et-search-results {
+  padding: 10px 24px;
+  background: #f0fdf4;
+  border-bottom: 1px solid #bbf7d0;
+  font-size: 13px;
+  color: #166534;
+  flex-shrink: 0;
+}
+
+.et-search-results strong {
+  font-weight: 600;
+}
+
+/* ---- Footer with pagination ---- */
+.et-expanded-footer {
+  flex-shrink: 0;
+  border-top: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+/* ========================================
+   SKELETON LOADING
+   ======================================== */
+.et-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 24px;
+}
+
+.et-skeleton-row {
+  display: flex;
+  gap: 12px;
+}
+
+.et-skeleton-cell {
+  height: 16px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  flex: 1;
+  animation: et-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes et-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ========================================
+   PAGINATION
+   ======================================== */
+.et-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 14px 0;
+}
+
+.et-pagination-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #555;
+  min-width: 34px;
+  transition: all 0.15s;
+}
+
+.et-pagination-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #bbb;
+}
+
+.et-pagination-btn.active {
+  background: #2d6a4f;
+  color: #fff;
+  border-color: #2d6a4f;
+  font-weight: 600;
+}
+
+.et-pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.et-pagination-ellipsis {
+  padding: 6px 4px;
+  color: #999;
+  font-size: 13px;
+}
+
+.et-pagination-info {
+  margin-left: 12px;
+  font-size: 12px;
+  color: #888;
+}
+
+
+
+'use client';
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { FiX, FiSearch, FiChevronLeft, FiChevronRight, FiMaximize2 } from 'react-icons/fi';
+import './ExpandableTable.css';
+
+export interface Column<T> {
+  key: string;
+  label: string;
+  className?: string;
+  render?: (row: T, index: number, currentPage: number, pageSize: number) => React.ReactNode;
+}
+
+export interface FetchResult<T> {
+  data: T[];
+  totalCount: number;
+}
+
+export interface ExpandableTableProps<T> {
+  title: string;
+  subtitle?: string;
+  columns: Column<T>[];
+  expandedColumns?: Column<T>[];
+  previewData: T[];
+  isLoading: boolean;
+  previewCount?: number;
+  pageSize?: number;
+  searchable?: boolean;
+  expandable?: boolean;
+  fetchData?: (page: number, pageSize: number, search?: string) => Promise<FetchResult<T>>;
+  rowKey: (row: T, index: number) => string;
+  compactRenderer?: (data: T[]) => React.ReactNode;
+  headerAction?: React.ReactNode;
+}
+
+function SkeletonRows({ count, columns }: { count: number; columns: number }) {
+  return (
+    <div className="et-skeleton">
+      {[...Array(count)].map((_, i) => (
+        <div key={i} className="et-skeleton-row">
+          {[...Array(columns)].map((_, j) => (
+            <div key={j} className="et-skeleton-cell" />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Pagination({
+  currentPage,
+  totalCount,
+  pageSize,
+  loading,
+  onPageChange,
+}: {
+  currentPage: number;
+  totalCount: number;
+  pageSize: number;
+  loading: boolean;
+  onPageChange: (page: number) => void;
+}) {
+  const totalPages = Math.ceil(totalCount / pageSize);
+  if (totalPages <= 1) return null;
+
+  const getPageNumbers = () => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const pages: (number | '...')[] = [];
+    if (currentPage <= 4) {
+      pages.push(1, 2, 3, 4, 5, '...', totalPages);
+    } else if (currentPage >= totalPages - 3) {
+      pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+    } else {
+      pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+    }
+    return pages;
+  };
+
+  return (
+    <div className="et-pagination">
+      <button
+        className="et-pagination-btn"
+        disabled={currentPage === 1 || loading}
+        onClick={() => onPageChange(currentPage - 1)}
+      >
+        <FiChevronLeft />
+      </button>
+      {getPageNumbers().map((page, i) =>
+        page === '...' ? (
+          <span key={`e-${i}`} className="et-pagination-ellipsis">...</span>
+        ) : (
+          <button
+            key={page}
+            className={`et-pagination-btn${page === currentPage ? ' active' : ''}`}
+            disabled={loading}
+            onClick={() => onPageChange(page as number)}
+          >
+            {page}
+          </button>
+        )
+      )}
+      <button
+        className="et-pagination-btn"
+        disabled={currentPage === totalPages || loading}
+        onClick={() => onPageChange(currentPage + 1)}
+      >
+        <FiChevronRight />
+      </button>
+      <span className="et-pagination-info">
+        Page {currentPage} of {totalPages} · {totalCount} total
+      </span>
+    </div>
+  );
+}
+
+export default function ExpandableTable<T>({
+  title,
+  subtitle,
+  columns,
+  expandedColumns,
+  previewData,
+  isLoading,
+  previewCount = 5,
+  pageSize = 15,
+  searchable = false,
+  expandable = true,
+  fetchData,
+  rowKey,
+  compactRenderer,
+  headerAction,
+}: ExpandableTableProps<T>) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [fullData, setFullData] = useState<T[]>([]);
+  const [fullLoading, setFullLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [allData, setAllData] = useState<T[] | null>(null);
+  const [filteredData, setFilteredData] = useState<T[]>([]);
+
+  const loadPage = useCallback(async (page: number, search?: string) => {
+    if (!fetchData) return;
+    setFullLoading(true);
+    try {
+      if (search) {
+        if (!allData) {
+          const result = await fetchData(1, 99999);
+          setAllData(result.data);
+          const filtered = result.data.filter((row) =>
+            Object.values(row as any).some((val) =>
+              String(val ?? '').toLowerCase().includes(search.toLowerCase())
+            )
+          );
+          const unique = filtered.filter((row, index, self) =>
+            index === self.findIndex((r) => JSON.stringify(r) === JSON.stringify(row))
+          );
+          setFilteredData(unique);
+          setTotalCount(unique.length);
+          setFullData(unique.slice(0, pageSize));
+        } else {
+          const filtered = allData.filter((row) =>
+            Object.values(row as any).some((val) =>
+              String(val ?? '').toLowerCase().includes(search.toLowerCase())
+            )
+          );
+          const unique = filtered.filter((row, index, self) =>
+            index === self.findIndex((r) => JSON.stringify(r) === JSON.stringify(row))
+          );
+          setFilteredData(unique);
+          setTotalCount(unique.length);
+          setFullData(unique.slice((page - 1) * pageSize, page * pageSize));
+        }
+      } else {
+        const result = await fetchData(page, pageSize);
+        setFullData(result.data);
+        setTotalCount(result.totalCount);
+      }
+      setCurrentPage(page);
+    } catch (error) {
+      console.error(`Error fetching ${title} data:`, error);
+    } finally {
+      setFullLoading(false);
+    }
+  }, [fetchData, pageSize, title, allData]);
+
+  const handleToggle = useCallback(() => {
+    if (isExpanded) {
+      // Animate close
+      setIsClosing(true);
+      setTimeout(() => {
+        setIsExpanded(false);
+        setIsClosing(false);
+        setSearchQuery('');
+        setCurrentPage(1);
+        setAllData(null);
+        setFilteredData([]);
+      }, 200);
+      return;
+    }
+    setIsExpanded(true);
+    loadPage(1);
+  }, [isExpanded, loadPage]);
+
+  const handlePageChange = useCallback((page: number) => {
+    if (searchQuery && filteredData.length > 0) {
+      setFullData(filteredData.slice((page - 1) * pageSize, page * pageSize));
+      setCurrentPage(page);
+    } else {
+      loadPage(page, searchQuery);
+    }
+  }, [loadPage, searchQuery, filteredData, pageSize]);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    searchTimeoutRef.current = setTimeout(() => {
+      setCurrentPage(1);
+      loadPage(1, value);
+    }, 400);
+  }, [loadPage]);
+
+  // Lock body scroll + handle Escape key
+  useEffect(() => {
+    if (isExpanded) {
+      document.body.style.overflow = 'hidden';
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') handleToggle();
+      };
+      document.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isExpanded, handleToggle]);
+
+  const displayData = isExpanded ? fullData : previewData.slice(0, previewCount);
+
+  const renderTable = (data: T[], showPagination: boolean, cols: Column<T>[]) => (
+    <>
+      <table className="et-table">
+        <thead>
+          <tr>
+            {cols.map((col) => (
+              <th key={col.key} className={col.className || ''}>{col.label}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, index) => (
+            <tr key={rowKey(row, index)}>
+              {cols.map((col) => (
+                <td key={col.key} className={col.className || ''}>
+                  {col.render
+                    ? col.render(row, index, currentPage, pageSize)
+                    : String((row as any)[col.key] ?? '')}
+                </td>
+              ))}
+            </tr>
+          ))}
+          {data.length === 0 && !fullLoading && (
+            <tr>
+              <td colSpan={cols.length} className="et-empty">
+                {searchQuery ? 'No results found' : 'No data available'}
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      {showPagination && (
+        <Pagination
+          currentPage={currentPage}
+          totalCount={totalCount}
+          pageSize={pageSize}
+          loading={fullLoading}
+          onPageChange={handlePageChange}
+        />
+      )}
+    </>
+  );
+
+  // ---- EXPANDED VIEW ----
+  if (isExpanded) {
+    return (
+      <div className={`et-overlay${isClosing ? ' et-closing' : ''}`} onClick={(e) => {
+        if (e.target === e.currentTarget) handleToggle();
+      }}>
+        <div className="et-expanded-container">
+          {/* Header bar */}
+          <div className="et-expanded-header">
+            <div className="et-expanded-header-left">
+              <h3>{title}</h3>
+              {subtitle && <p className="et-subtitle">{subtitle}</p>}
+            </div>
+            <div className="et-expanded-actions">
+              {headerAction}
+              {searchable && (
+                <div className="et-search">
+                  <FiSearch className="et-search-icon" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    className="et-search-input"
+                    placeholder="Search..."
+                    autoFocus
+                  />
+                </div>
+              )}
+              <button onClick={handleToggle} className="et-close-btn" title="Close (Esc)">
+                <FiX />
+              </button>
+            </div>
+          </div>
+
+          {/* Search results count */}
+          {searchQuery && !fullLoading && (
+            <div className="et-search-results">
+              Found <strong>{totalCount}</strong> results for "{searchQuery}"
+            </div>
+          )}
+
+          {/* Scrollable table area */}
+          <div className="et-expanded-content">
+            {fullLoading ? (
+              <SkeletonRows count={pageSize} columns={(expandedColumns || columns).length} />
+            ) : (
+              renderTable(fullData, false, expandedColumns || columns)
+            )}
+          </div>
+
+          {/* Pinned footer with pagination */}
+          {!fullLoading && totalCount > 0 && (
+            <div className="et-expanded-footer">
+              <Pagination
+                currentPage={currentPage}
+                totalCount={totalCount}
+                pageSize={pageSize}
+                loading={fullLoading}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ---- COMPACT VIEW ----
+  return (
+    <div className="et-section">
+      <div className="et-header">
+        <div>
+          <h3>{title}</h3>
+          {subtitle && <p className="et-subtitle">{subtitle}</p>}
+        </div>
+        <div className="et-header-actions">
+          {headerAction}
+          {expandable && (
+            <button onClick={handleToggle} className="et-toggle-btn">
+              <FiMaximize2 />
+            </button>
+          )}
+        </div>
+      </div>
+      <div className="et-preview">
+        {isLoading ? (
+          <SkeletonRows count={pageSize} columns={(expandedColumns || columns).length} />
+        ) : compactRenderer ? (
+          compactRenderer(displayData)
+        ) : (
+          renderTable(displayData, false, columns)
+        )}
+      </div>
+    </div>
+  );
+}
