@@ -3,3 +3,244 @@ Flask-SQLAlchemy==3.1.1
 Flask-Bcrypt==1.0.1
 Flask-JWT-Extended==4.6.0
 python-dotenv==1.0.0
+
+
+
+
+/* ============================================================
+   RESPONSIVE PREVIEW TABLES
+   Handles all screen sizes: small laptops to ultrawide.
+   Scoped to .et-preview only — expanded view untouched.
+   ============================================================ */
+
+/* Base fix: adaptive height instead of fixed 310px */
+.et-preview {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.et-preview .et-table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.et-preview .et-table thead th {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.et-preview .et-table tbody td {
+    vertical-align: top;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Small laptops / narrow screens */
+@media (max-width: 1440px) {
+    .et-preview {
+        max-height: 380px;
+        padding: 0 12px 10px;
+    }
+
+    .et-preview .et-table {
+        font-size: 12px;
+    }
+
+    .et-preview .et-table thead th {
+        padding: 7px 6px;
+        font-size: 10px;
+    }
+
+    .et-preview .et-table tbody td {
+        padding: 5px 6px;
+        font-size: 11.5px;
+        line-height: 1.3;
+    }
+
+    .et-header {
+        padding: 12px 14px;
+    }
+
+    .et-header h3 {
+        font-size: 14px;
+    }
+
+    .et-subtitle {
+        font-size: 10px;
+    }
+}
+
+/* Smaller laptops */
+@media (max-width: 1280px) {
+    .et-preview {
+        max-height: 350px;
+        padding: 0 10px 8px;
+    }
+
+    .et-preview .et-table {
+        font-size: 11.5px;
+    }
+
+    .et-preview .et-table thead th {
+        padding: 6px 5px;
+        font-size: 9.5px;
+        letter-spacing: 0;
+    }
+
+    .et-preview .et-table tbody td {
+        padding: 4px 5px;
+        font-size: 11px;
+        line-height: 1.25;
+    }
+
+    .et-header {
+        padding: 10px 12px;
+    }
+
+    .et-header h3 {
+        font-size: 13px;
+    }
+}
+
+/* Narrow displays */
+@media (max-width: 1024px) {
+    .et-preview {
+        max-height: 300px;
+        padding: 0 8px 6px;
+    }
+
+    .et-preview .et-table {
+        font-size: 11px;
+    }
+
+    .et-preview .et-table thead th {
+        padding: 5px 4px;
+        font-size: 9px;
+    }
+
+    .et-preview .et-table tbody td {
+        padding: 3px 4px;
+        font-size: 10.5px;
+        line-height: 1.2;
+    }
+
+    .et-header h3 {
+        font-size: 12px;
+    }
+
+    .et-subtitle {
+        font-size: 9px;
+    }
+}
+
+/* Tiny screens */
+@media (max-width: 768px) {
+    .et-preview .et-table thead th {
+        padding: 4px 3px;
+        font-size: 8.5px;
+    }
+
+    .et-preview .et-table tbody td {
+        padding: 3px 3px;
+        font-size: 10px;
+    }
+}
+
+/* Large and ultrawide monitors */
+@media (min-width: 1921px) {
+    .et-preview {
+        max-height: 500px;
+    }
+
+    .et-preview .et-table tbody td {
+        padding: 10px 14px;
+    }
+}
+
+/* ============================================================
+   METRIC BADGES FIX
+   Forces any inline badges/spans inside preview table cells
+   to scale down and wrap properly on smaller screens.
+   ============================================================ */
+
+.et-preview .et-table tbody td span {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+@media (max-width: 1440px) {
+    .et-preview .et-table tbody td span {
+        font-size: 11px !important;
+        padding: 2px 6px !important;
+        margin: 1px 2px !important;
+    }
+}
+
+@media (max-width: 1280px) {
+    .et-preview .et-table tbody td span {
+        font-size: 10px !important;
+        padding: 1px 4px !important;
+        margin: 1px 1px !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .et-preview .et-table tbody td span {
+        font-size: 9px !important;
+        padding: 1px 3px !important;
+        margin: 0 1px !important;
+        border-radius: 3px !important;
+    }
+}
+
+
+
+
+
+
+
+<script
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function() {
+        try {
+          var KEY = 'qdi_chunk_reload';
+          var MAX = 2;
+
+          function getCount() {
+            try { return parseInt(sessionStorage.getItem(KEY) || '0', 10); } catch(e) { return 0; }
+          }
+          function setCount(n) {
+            try { sessionStorage.setItem(KEY, String(n)); } catch(e) {}
+          }
+          function resetCount() {
+            try { sessionStorage.removeItem(KEY); } catch(e) {}
+          }
+
+          window.addEventListener('error', function(ev) {
+            var t = ev && ev.target;
+            if (t && (t.tagName === 'SCRIPT' || t.tagName === 'LINK')) {
+              var src = t.src || t.href || '';
+              if (src.indexOf('/_next/static/') !== -1) {
+                var c = getCount();
+                if (c < MAX) {
+                  setCount(c + 1);
+                  window.location.reload();
+                }
+              }
+            }
+          }, true);
+
+          window.addEventListener('load', function() {
+            setTimeout(function() { resetCount(); }, 5000);
+          });
+        } catch(e) {}
+      })();
+    `,
+  }}
+/>
